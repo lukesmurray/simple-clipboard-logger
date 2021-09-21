@@ -1,11 +1,12 @@
 {
-  "name": "simple-clipbboard-logger",
+  "name": "simple-clipboard-logger",
   "version": "0.0.0",
   "description": "",
   "keywords": [],
-  "main": "dist/simple-clipbboard-logger.umd.js",
-  "module": "dist/simple-clipbboard-logger.es5.js",
-  "typings": "dist/types/simple-clipbboard-logger.d.ts",
+  "main": "dist/simple-clipboard-logger.umd.js",
+  "module": "dist/simple-clipboard-logger.es5.js",
+  "browser": "dist/simple-clipboard-logger.iife.js",
+  "typings": "dist/types/simple-clipboard-logger.d.ts",
   "files": [
     "dist"
   ],
@@ -17,12 +18,15 @@
   "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs && rollup -c rollup.config.ts",
+    "build": "rollup -c rollup.config.ts",
     "start": "rollup -c rollup.config.ts -w",
     "lint:fix": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "lint": "eslint '*/**/*.{js,ts,tsx}'"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.0.4",
     "@typescript-eslint/eslint-plugin": "^4.31.2",
     "@typescript-eslint/parser": "^4.31.2",
     "esbuild": "^0.12.28",
@@ -33,13 +37,8 @@
     "prettier": "^2.4.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.56.3",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-dts": "^4.0.0",
-    "rollup-plugin-esbuild": "^4.5.0",
-    "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-sourcemaps": "^0.6.3",
-    "rollup-plugin-typescript2": "^0.30.0",
+    "rollup-plugin-ts": "^1.4.6",
     "typescript": "^4.3.2"
   },
   "dependencies": {
