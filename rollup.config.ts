@@ -1,6 +1,7 @@
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
+import replace from "@rollup/plugin-replace";
 import camelCase from "lodash.camelcase";
 import sourceMaps from "rollup-plugin-sourcemaps";
 import ts from "rollup-plugin-ts";
@@ -37,7 +38,9 @@ export default {
     // Allow node_modules resolution, so you can use 'external' to control
     // which external modules to include in the bundle
     // https://github.com/rollup/plugins/tree/master/packages/node-resolve
-    nodeResolve(),
+    nodeResolve({
+      browser: true,
+    }),
 
     // because most packages on npm are commonjs we use this plugin so rollup
     // can bundle commonjs modules
@@ -48,5 +51,10 @@ export default {
 
     // minify the output
     // terser(),
+
+    // replace node_env with stringified value from the current process
+    replace({
+      "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
+    }),
   ],
 };
