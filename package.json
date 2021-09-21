@@ -1,17 +1,27 @@
 {
-  "name": "simple-clipboard-logger",
+  "name": "simple-clipbboard-logger",
   "version": "0.0.0",
-  "scripts": {
-    "build": "rollup -c",
-    "lint:fix": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "lint": "eslint '*/**/*.{js,ts,tsx}'"
-  },
+  "description": "",
+  "keywords": [],
+  "main": "dist/simple-clipbboard-logger.umd.js",
+  "module": "dist/simple-clipbboard-logger.es5.js",
+  "typings": "dist/types/simple-clipbboard-logger.d.ts",
   "files": [
     "dist"
   ],
-  "main": "./dist/simple-clipboard-logger.js",
-  "module": "./dist/simple-clipboard-logger.mjs",
-  "typings": "./dist/simple-clipboard-logger.d.ts",
+  "author": "Luke Murray lukepigeonmail@gmail.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lukesmurray/simple-clipboard-logger"
+  },
+  "license": "MIT",
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "tsc --module commonjs && rollup -c rollup.config.ts",
+    "start": "rollup -c rollup.config.ts -w",
+    "lint:fix": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "lint": "eslint '*/**/*.{js,ts,tsx}'"
+  },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.31.2",
     "@typescript-eslint/parser": "^4.31.2",
@@ -19,10 +29,17 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "lodash.camelcase": "^4.3.0",
     "prettier": "^2.4.1",
+    "rimraf": "^3.0.2",
     "rollup": "^2.56.3",
+    "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-dts": "^4.0.0",
     "rollup-plugin-esbuild": "^4.5.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-sourcemaps": "^0.6.3",
+    "rollup-plugin-typescript2": "^0.30.0",
     "typescript": "^4.3.2"
   },
   "dependencies": {
