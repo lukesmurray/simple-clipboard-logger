@@ -13,6 +13,7 @@
     var logger = new simpleClipboardLogger.SimpleClipboardLogger();
     logger.addEventTarget(document);
     logger.addMetadataProvider(simpleClipboardLogger.metadataProviders.dateMetadataProvider);
+    logger.addMetadataProvider(simpleClipboardLogger.metadataProviders.hrefMetadataProvider);
     logger.addMetadataProvider(simpleClipboardLogger.metadataProviders.selectionIdMetadataProvider());
     logger.addEventLogger(simpleClipboardLogger.eventLoggers.consoleEventLogger);
     window.clipboardLogger = logger;

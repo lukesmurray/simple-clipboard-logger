@@ -1,3 +1,4 @@
+import "../utils/cryptoPolyfill";
 import { nanoid } from "nanoid";
 import { MetadataProvider } from "../types/MetadataProvider";
 
