@@ -1,5 +1,7 @@
 node_modules
 .DS_Store
-dist
+dist/**/*
+!dist/simple-clipboard-logger.iife.js
+!dist/simple-clipboard-logger.iife.js.map
 dist-ssr
 *.local

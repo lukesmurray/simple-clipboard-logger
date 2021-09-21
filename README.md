@@ -12,7 +12,7 @@ Implements logging for clipboard data and provides mechanisms to extend the capt
   var logger = new simpleClipboardLogger.SimpleClipboardLogger();
   // make the logger listen to all clipboard events on the document
   logger.addEventTarget(document);
-  // track data info
+  // track date info
   logger.addMetadataProvider(simpleClipboardLogger.metadataProviders.dateMetadataProvider);
   // track url info
   logger.addMetadataProvider(simpleClipboardLogger.metadataProviders.hrefMetadataProvider);
@@ -20,7 +20,6 @@ Implements logging for clipboard data and provides mechanisms to extend the capt
   logger.addMetadataProvider(simpleClipboardLogger.metadataProviders.selectionIdMetadataProvider());
   // log when the event happens using all the captured data
   logger.addEventLogger(simpleClipboardLogger.eventLoggers.consoleEventLogger);
-  window.clipboardLogger = logger;
 </script>
 ```
 
