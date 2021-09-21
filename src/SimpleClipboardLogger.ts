@@ -9,6 +9,12 @@ export default class SimpleClipboardLogger {
   private eventFilters: EventFilter[] = [];
   private eventLoggers: EventLogger[] = [];
 
+  constructor() {
+    this.onCopy = this.onCopy.bind(this);
+    this.onCut = this.onCut.bind(this);
+    this.onPaste = this.onPaste.bind(this);
+  }
+
   addMetadataProvider(metadataProvider: MetadataProvider) {
     this.metadataProviders.push(metadataProvider);
   }
@@ -52,7 +58,7 @@ export default class SimpleClipboardLogger {
       copy?: boolean;
       cut?: boolean;
       paste?: boolean;
-    },
+    } = {},
   ) {
     // add event listeners
     if (copy) {
@@ -146,7 +152,7 @@ export default class SimpleClipboardLogger {
   }
 
   private isFiltered(e: ClipboardEvent) {
-    return this.eventFilters.every((filter) => filter(e));
+    return !this.eventFilters.every((f) => f(e));
   }
 
   private getMetadata(e: ClipboardEvent) {

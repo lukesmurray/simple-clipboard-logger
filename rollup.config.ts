@@ -4,6 +4,7 @@ import { nodeResolve } from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
 import camelCase from "lodash.camelcase";
 import sourceMaps from "rollup-plugin-sourcemaps";
+import { terser } from "rollup-plugin-terser";
 import ts from "rollup-plugin-ts";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -50,7 +51,7 @@ export default {
     sourceMaps(),
 
     // minify the output
-    // terser(),
+    terser(),
 
     // replace node_env with stringified value from the current process
     replace({

@@ -1,1 +1,1 @@
-export type EventLogger = (e: ClipboardEvent) => void;
+export type EventLogger = (metadata: any) => void;
