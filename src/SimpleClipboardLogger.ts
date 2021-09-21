@@ -1,10 +1,9 @@
-import { nanoid } from "nanoid";
 import { DefaultMetadata } from "./types/DefaultMetadata";
 import { EventFilter } from "./types/EventFilter";
 import { EventLogger } from "./types/EventLogger";
 import { MetadataProvider } from "./types/MetadataProvider";
 
-export default class SimpleClipboardLogger {
+export class SimpleClipboardLogger {
   private metadataProviders: MetadataProvider[] = [];
   private eventFilters: EventFilter[] = [];
   private eventLoggers: EventLogger[] = [];
@@ -90,47 +89,28 @@ export default class SimpleClipboardLogger {
     return unsubscribe;
   }
 
-  private onCopy(e: ClipboardEvent) {
+  private handleCopyOrCut(e: ClipboardEvent, eventType: "copy" | "cut") {
     if (this.isFiltered(e)) {
       return;
     }
-    const selectionId = nanoid();
     const defaultMetadata: DefaultMetadata = {
-      eventType: "copy",
+      eventType: eventType,
       data: {
-        "text/html": e.clipboardData?.getData("text/html") ?? undefined,
-        "text/plain": e.clipboardData?.getData("text/plain") ?? undefined,
+        "text/plain": window.getSelection()?.toString(),
       },
-      selectionId,
     };
 
-    e.clipboardData?.setData("application/simpleClipboardLogger", selectionId);
-
-    const metadata = this.getMetadata(e);
+    const metadata = this.getMetadata(e, defaultMetadata);
 
     this.logEvent({ ...defaultMetadata, ...metadata });
   }
 
+  private onCopy(e: ClipboardEvent) {
+    this.handleCopyOrCut(e, "copy");
+  }
+
   private onCut(e: ClipboardEvent) {
-    if (this.isFiltered(e)) {
-      return;
-    }
-
-    const selectionId = nanoid();
-    const defaultMetadata: DefaultMetadata = {
-      eventType: "cut",
-      data: {
-        "text/html": e.clipboardData?.getData("text/html") ?? undefined,
-        "text/plain": e.clipboardData?.getData("text/plain") ?? undefined,
-      },
-      selectionId,
-    };
-
-    e.clipboardData?.setData("application/simpleClipboardLogger", selectionId);
-
-    const metadata = this.getMetadata(e);
-
-    this.logEvent({ ...defaultMetadata, ...metadata });
+    this.handleCopyOrCut(e, "copy");
   }
 
   private onPaste(e: ClipboardEvent) {
@@ -143,10 +123,9 @@ export default class SimpleClipboardLogger {
         "text/html": e.clipboardData?.getData("text/html"),
         "text/plain": e.clipboardData?.getData("text/plain"),
       },
-      selectionId: e.clipboardData?.getData("application/simpleClipboardLogger"),
     };
 
-    const metadata = this.getMetadata(e);
+    const metadata = this.getMetadata(e, defaultMetadata);
 
     this.logEvent({ ...defaultMetadata, ...metadata });
   }
@@ -155,10 +134,12 @@ export default class SimpleClipboardLogger {
     return !this.eventFilters.every((f) => f(e));
   }
 
-  private getMetadata(e: ClipboardEvent) {
-    return this.metadataProviders
-      .map((provider) => (typeof provider === "function" ? provider(e) : provider))
-      .reduce((prev, curr) => ({ ...prev, ...curr }), {});
+  private getMetadata(e: ClipboardEvent, defaultMetadata: DefaultMetadata) {
+    return this.metadataProviders.reduce(
+      (prev, provider) =>
+        typeof provider === "function" ? { ...prev, ...provider(e, prev as any) } : { ...prev, ...provider },
+      defaultMetadata,
+    );
   }
 
   private logEvent(metadata: any) {

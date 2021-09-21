@@ -1,5 +1,3 @@
-import { consoleLogger } from "./eventLoggers/consoleEventLogger";
-import SimpleClipboardLogger from "./SimpleClipboardLogger";
-
-export { consoleLogger };
-export default SimpleClipboardLogger;
+export * as eventLoggers from "./eventLoggers";
+export * as metadataProviders from "./metadataProviders";
+export { SimpleClipboardLogger } from "./SimpleClipboardLogger";

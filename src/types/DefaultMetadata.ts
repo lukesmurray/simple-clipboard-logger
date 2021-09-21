@@ -4,5 +4,4 @@ export type DefaultMetadata = {
     "text/plain"?: string;
     "text/html"?: string;
   };
-  selectionId?: string;
 };
