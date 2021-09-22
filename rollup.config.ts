@@ -27,7 +27,7 @@ const commonSettings = {
 // umd - we need to minify and transpile for browser support
 const umdBuild = {
   ...commonSettings,
-  output: [{ file: pkg.browser, name: camelCase(libraryName), format: "umd", sourcemap: true, exports: "named" }],
+  output: [{ file: pkg.browser, name: camelCase(libraryName), format: "umd", sourcemap: true }],
   plugins: [
     // resolve json files
     json(),
@@ -68,9 +68,10 @@ const umdBuild = {
 const esmAndCJSBuild = {
   ...commonSettings,
   output: [
-    { dir: "dist/esm", format: "es", sourcemap: true, exports: "named" },
-    { dir: "dist/cjs", format: "cjs", sourcemap: true, exports: "named" },
+    { dir: "dist/esm", format: "es", sourcemap: true },
+    { dir: "dist/cjs", format: "cjs", sourcemap: true },
   ],
+  external: ["axios", "nanoid"],
   plugins: [
     json(),
     nodeResolve(),
