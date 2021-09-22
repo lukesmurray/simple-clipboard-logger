@@ -7,15 +7,13 @@ Implements logging for clipboard data and provides mechanisms to extend the capt
 Out of the box supports tracking the date and time, tracking the current url, and using unique ids to link copy/paste events.
 Works in **any browser >IE11** and is very tiny **<2kb**.
 
-
-
 ## Example Usage
 
 **As a script tag**
 
 ```html
-<!-- include the clipboard logger iife -->
-<script type="text/javascript" src="../dist/simple-clipboard-logger.iife.js"></script>
+<!-- include the clipboard logger minified file -->
+<script type="text/javascript" src="simple-clipboard-logger.min.js"></script>
 <script type="text/javascript">
   // create a new logger instance
   var logger = new simpleClipboardLogger.SimpleClipboardLogger();
@@ -70,5 +68,3 @@ The json is logged to the console using the `consoleEventLogger` but could be se
 - `MetadataProvider`: Metadata providers can be used to add metadata to the logged event. A metadata provider is a function that returns an object or an object. The returned object will be merged with the metadata from the previous provider. The metadata provider function receives the event data as well as the previous metadata. It is best practice to return an object with new metadata rather than modifying the previous metadata. The previous metadata is simply provided to allow for conditional data capture.
 - `EventLogger`: Event loggers receive the final metadata and can do whatever they want with it. You could post the data to a server or you can simply log it to the console.
 - `EventFilter`: Event filters take the clipboard event and return a boolean indicating whether the event should be filtered. This is simple to javascript filters where anything which is true is passed through and anything which is false is filtered out.
-
-

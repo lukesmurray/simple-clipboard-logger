@@ -3,9 +3,9 @@
   "version": "0.0.3",
   "description": "",
   "keywords": [],
-  "main": "dist/simple-clipboard-logger.umd.js",
-  "module": "dist/simple-clipboard-logger.es5.js",
-  "browser": "dist/simple-clipboard-logger.iife.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "browser": "dist/simple-clipboard-logger.min.js",
   "typings": "dist/types/simple-clipboard-logger.d.ts",
   "files": [
     "dist"
@@ -23,33 +23,43 @@
     "lint:fix": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "lint": "eslint '*/**/*.{js,ts,tsx}'",
     "dev": "open http:localhost:3000/example && serve . -p 3000",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "analyze": "yarn run analyze:umd && yarn run analyze:cjs && yarn run analyze:esm",
+    "analyze:umd": "source-map-explorer dist/simple-clipboard-logger.min.js*",
+    "analyze:esm": "source-map-explorer dist/esm/*.js*",
+    "analyze:cjs": "source-map-explorer dist/cjs/*.js*"
   },
   "devDependencies": {
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "^7.15.6",
+    "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^20.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@rollup/plugin-replace": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^4.31.2",
     "@typescript-eslint/parser": "^4.31.2",
-    "esbuild": "^0.12.28",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "lodash.camelcase": "^4.3.0",
-    "lodash.startcase": "^4.4.0",
     "open": "^8.2.1",
     "prettier": "^2.4.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.56.3",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-ts": "^1.4.6",
+    "rollup-plugin-typescript2": "^0.30.0",
     "serve": "^12.0.1",
-    "typescript": "^4.3.2"
+    "source-map-explorer": "^2.5.2",
+    "tslib": "^2.3.1",
+    "typescript": "^4.4.3"
   },
   "dependencies": {
-    "nanoid": "^3.1.25"
+    "axios": "^0.21.4",
+    "core-js": "^3.18.0",
+    "nanoid": "^3.1.25",
+    "regenerator-runtime": "^0.13.9"
   },
   "sideEffects": false
 }

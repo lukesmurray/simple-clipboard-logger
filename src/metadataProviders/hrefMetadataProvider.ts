@@ -1,7 +1,7 @@
 import { MetadataProvider } from "../types/MetadataProvider";
 
-export const hrefMetadataProvider: MetadataProvider = (e, prev) => {
+export const hrefMetadataProvider: MetadataProvider = () => {
   return {
-    [`${prev.eventType}Href`]: window.location.href,
+    href: window.location.href,
   };
 };
