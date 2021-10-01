@@ -5,7 +5,7 @@ module.exports = {
       {
         // browserslist
         targets: {
-          browsers: "> 0.5%, ie >= 11",
+          browsers: "last 2 chrome versions, last 2 firefox versions, ie 11, last 2 safari versions",
         },
         // add imports for polyfills in each file
         useBuiltIns: "usage",
