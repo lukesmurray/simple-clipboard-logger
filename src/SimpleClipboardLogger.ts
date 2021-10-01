@@ -1,17 +1,24 @@
+import throttle from "lodash.throttle";
 import { DefaultMetadata } from "./types/DefaultMetadata";
 import { EventFilter } from "./types/EventFilter";
 import { EventLogger } from "./types/EventLogger";
 import { MetadataProvider } from "./types/MetadataProvider";
 
+export type SimpleClipboardLoggerOptions = {
+  throttleWait?: number;
+};
+
 export class SimpleClipboardLogger {
   private metadataProviders: MetadataProvider[] = [];
   private eventFilters: EventFilter[] = [];
   private eventLoggers: EventLogger[] = [];
+  private options: SimpleClipboardLoggerOptions | undefined;
 
-  constructor() {
+  constructor(options?: SimpleClipboardLoggerOptions) {
     this.onCopy = this.onCopy.bind(this);
     this.onCut = this.onCut.bind(this);
     this.onPaste = this.onPaste.bind(this);
+    this.options = options;
   }
 
   addMetadataProvider(metadataProvider: MetadataProvider) {
@@ -59,29 +66,35 @@ export class SimpleClipboardLogger {
       paste?: boolean;
     } = {},
   ) {
+    const throttleWait = this.options?.throttleWait;
     // add event listeners
+
+    const copyFunc = throttleWait !== undefined ? (throttle(this.onCopy, throttleWait) as any) : (this.onCopy as any);
     if (copy) {
-      target.addEventListener("copy", this.onCopy as any);
+      target.addEventListener("copy", copyFunc);
     }
 
+    const cutFunc = throttleWait !== undefined ? (throttle(this.onCut, throttleWait) as any) : (this.onCut as any);
     if (cut) {
-      target.addEventListener("cut", this.onCut as any);
+      target.addEventListener("cut", cutFunc);
     }
 
+    const pasteFunc =
+      throttleWait !== undefined ? (throttle(this.onPaste, throttleWait) as any) : (this.onPaste as any);
     if (paste) {
-      target.addEventListener("paste", this.onPaste as any);
+      target.addEventListener("paste", pasteFunc);
     }
 
     // create unsubscribe func
     const unsubscribe = () => {
       if (copy) {
-        target.removeEventListener("copy", this.onCopy as any);
+        target.removeEventListener("copy", copyFunc);
       }
       if (cut) {
-        target.removeEventListener("cut", this.onCut as any);
+        target.removeEventListener("cut", cutFunc);
       }
       if (paste) {
-        target.removeEventListener("paste", this.onPaste as any);
+        target.removeEventListener("paste", pasteFunc);
       }
     };
 

@@ -10,7 +10,7 @@
   <script type="text/javascript" src="../dist/simple-clipboard-logger.min.js"></script>
   <!-- use the clipboard logger -->
   <script type="text/javascript">
-    var logger = new simpleClipboardLogger.SimpleClipboardLogger();
+    var logger = new simpleClipboardLogger.SimpleClipboardLogger({ throttleWait: 333 });
     logger.addEventTarget(document);
     logger.addMetadataProvider(simpleClipboardLogger.metadataProviders.dateMetadataProvider);
     logger.addMetadataProvider(simpleClipboardLogger.metadataProviders.hrefMetadataProvider);
