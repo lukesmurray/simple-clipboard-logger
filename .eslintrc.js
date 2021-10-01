@@ -19,6 +19,7 @@ module.exports = {
     // "plugin:react-hooks/recommended", // Uses the recommended rules from eslint-plugin-react-hooks
     // "plugin:jsx-a11y/recommended", // Uses the recommended rules from eslint-plugin-jsx-a11y
     "plugin:prettier/recommended", // Enables eslint-plugin-prettier and eslint-config-prettier. This will display prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
+    "plugin:cypress/recommended", // Enabled cypress recommeneded settings
   ],
   rules: {
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
@@ -30,6 +31,7 @@ module.exports = {
     // "testing-library", // find common mistakes while testing with testing library
     // "jest", // find commmon mistakes while testing with jest
     // "jest-dom", // find common mistakes while testing with jest dom
+    "cypress", // find common mistakes while testing with cypress
   ],
   overrides: [
     // {

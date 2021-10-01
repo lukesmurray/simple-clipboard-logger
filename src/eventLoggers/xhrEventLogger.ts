@@ -77,7 +77,7 @@ export const xhrRequest = <Return = any>(config: xhrRequestConfig) => {
   });
 };
 
-export const axiosEventLogger: (
+export const xhrEventLogger: (
   xhrConfigProvider: XhrRequestConfigProvider,
   xhrResolver?: XhrRequestResolver,
 ) => EventLogger = (xhrConfigProvider, xhrResolver) => (metadata) => {

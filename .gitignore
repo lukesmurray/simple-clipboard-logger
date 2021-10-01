@@ -5,3 +5,4 @@ dist/**/*
 !dist/simple-clipboard-logger.min.js.map
 dist-ssr
 *.local
+.direnv

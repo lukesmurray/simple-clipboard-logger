@@ -3,9 +3,14 @@
 [![npm](https://img.shields.io/npm/v/simple-clipboard-logger)](https://www.npmjs.com/package/simple-clipboard-logger)
 [![npm bundle size](https://img.shields.io/bundlephobia/minzip/simple-clipboard-logger)](https://www.npmjs.com/package/simple-clipboard-logger)
 
-Implements logging for clipboard data and provides mechanisms to extend the captured data for each event.
-Out of the box supports tracking the date and time, tracking the current url, and using unique ids to link copy/paste events.
-Works in **any browser >IE11** and is very tiny **<2kb**.
+This library implements an extensible logger for capturing and analyzing clipboard data.
+
+The majority of the code is in [SimpleClipboardLogger.ts](src/SimpleClipboardLogger.ts). The logger adds event listeners to the `copy`, `cut`, and `paste` events. These event listeners collect metadata from the event as well as user supplied metadata providers and pass the metadata to user supplied loggers.
+
+The library comes with several example `metadataProviders` which can be used to add the date, href, and a unique id to the clipboard data.
+the library also comes with a couple of `eventLoggers` which can be used to log data to the console or to a remote server.
+
+The library does not override any default behavior or modify the clipboard, it just calls additional functions when the events are triggered.
 
 ## Example Usage
 
@@ -68,3 +73,7 @@ The json is logged to the console using the `consoleEventLogger` but could be se
 - `MetadataProvider`: Metadata providers can be used to add metadata to the logged event. A metadata provider is a function that returns an object or an object. The returned object will be merged with the metadata from the previous provider. The metadata provider function receives the event data as well as the previous metadata. It is best practice to return an object with new metadata rather than modifying the previous metadata. The previous metadata is simply provided to allow for conditional data capture.
 - `EventLogger`: Event loggers receive the final metadata and can do whatever they want with it. You could post the data to a server or you can simply log it to the console.
 - `EventFilter`: Event filters take the clipboard event and return a boolean indicating whether the event should be filtered. This is simple to javascript filters where anything which is true is passed through and anything which is false is filtered out.
+
+## Testing
+
+There are some cypress tests but they don't do much. Testing copy/paste is difficult do to security restrictions in browsers.
