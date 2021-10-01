@@ -67,11 +67,12 @@ const umdBuild = {
 // cjs - we just compile the code no minifying or transpiling
 const esmAndCJSBuild = {
   ...commonSettings,
+  preserveModules: true,
   output: [
     { dir: "dist/esm", format: "es", sourcemap: true },
     { dir: "dist/cjs", format: "cjs", sourcemap: true },
   ],
-  external: ["axios", "nanoid"],
+  external: ["nanoid"],
   plugins: [
     json(),
     nodeResolve(),

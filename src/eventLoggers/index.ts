@@ -1,2 +1,2 @@
-export * from "./axiosEventLogger";
 export * from "./consoleEventLogger";
+export * from "./xhrEventLogger";
