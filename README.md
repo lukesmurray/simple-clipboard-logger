@@ -28,8 +28,6 @@ The library does not override any default behavior or modify the clipboard, it j
   logger.addMetadataProvider(simpleClipboardLogger.metadataProviders.dateMetadataProvider);
   // track url info
   logger.addMetadataProvider(simpleClipboardLogger.metadataProviders.hrefMetadataProvider);
-  // provide a unique id across copy/paste events
-  logger.addMetadataProvider(simpleClipboardLogger.metadataProviders.selectionIdMetadataProvider());
   // log when the event happens using all the captured data
   logger.addEventLogger(simpleClipboardLogger.eventLoggers.consoleEventLogger);
 </script>
@@ -50,7 +48,6 @@ The json is logged to the console using the `consoleEventLogger` but could be se
     },
     "date": "2021-09-22T00:49:30.481Z",
     "href": "http://localhost:3000/example",
-    "selectionId": "HhS95JTaMIasOJJi9M_So"
 }
 
 // paste
@@ -62,7 +59,6 @@ The json is logged to the console using the `consoleEventLogger` but could be se
     },
     "date": "2021-09-22T00:51:28.224Z",
     "href": "http://localhost:3000/example",
-    "selectionId": "HhS95JTaMIasOJJi9M_So"
 }
 ```
 

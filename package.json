@@ -61,7 +61,6 @@
   "dependencies": {
     "core-js": "^3.18.0",
     "lodash.throttle": "^4.1.1",
-    "nanoid": "^3.1.25",
     "regenerator-runtime": "^0.13.9"
   },
   "sideEffects": false
