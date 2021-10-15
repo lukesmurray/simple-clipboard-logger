@@ -19,69 +19,74 @@ export interface xhrResponse<Return> {
   statusText: XMLHttpRequest["statusText"];
 }
 
-export type XhrRequestConfigProvider = (metadata: any) => xhrRequestConfig;
-export type XhrRequestResolver = (result: Promise<any>) => void;
+export type XhrSuccessCallback<Return = any> = (result: xhrResponse<Return>) => void;
+export type XhrErrorCallback = (error: Error) => void;
 
-export const xhrRequest = <Return = any>(config: xhrRequestConfig) => {
-  return new Promise<xhrResponse<Return>>((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
+export type XhrRequestConfigProvider<Return = any> = (metadata: any) => {
+  config: xhrRequestConfig;
+  onSuccess?: XhrSuccessCallback<Return>;
+  onError?: XhrErrorCallback;
+};
 
-    // Setup our listener to process completed requests
-    xhr.onreadystatechange = function () {
-      // Only run if the request is complete
-      if (xhr.readyState !== 4) {
-        return;
-      }
+export const xhrRequest = <Return = any>(
+  config: xhrRequestConfig,
+  onSuccess?: XhrSuccessCallback<Return>,
+  onError?: XhrErrorCallback,
+): void => {
+  const xhr = new XMLHttpRequest();
 
-      // ok if the status is in range 200
-      const ok = xhr.status >= 200 && xhr.status < 300;
-
-      // handle success
-      if (ok) {
-        // parse json responses
-        let response: any = xhr.response;
-        if ((config.responseType ?? "json") === "json") {
-          try {
-            response = JSON.parse(xhr.response);
-          } catch (e) {
-            reject(
-              new Error(
-                `${xhr.status}: ${xhr.statusText}\nrequested: ${config.url}\nFailed to parse json. Received...\n${xhr.responseText}`,
-              ),
-            );
-          }
-        }
-
-        // no error yay!
-        resolve({
-          ok,
-          response,
-          responseText: xhr.responseText,
-          responseType: xhr.responseType,
-          status: xhr.status,
-          statusText: xhr.statusText,
-        });
-      } else {
-        // reject with an error message
-        reject(new Error(`${xhr.status}: ${xhr.statusText}\nrequested: ${config.url}\n\n${xhr.responseText}`));
-      }
-    };
-
-    xhr.open(config.method, config.url, true);
-    if (config.headers !== undefined) {
-      for (const key of Object.keys(config.headers)) {
-        xhr.setRequestHeader(key, config.headers[key]);
-      }
+  // Setup our listener to process completed requests
+  xhr.onreadystatechange = function () {
+    // Only run if the request is complete
+    if (xhr.readyState !== 4) {
+      return;
     }
-    xhr.send((config.body ?? null) as any);
-  });
+
+    // ok if the status is in range 200
+    const ok = xhr.status >= 200 && xhr.status < 300;
+
+    // handle success
+    if (ok) {
+      // parse json responses
+      let response: any = xhr.response;
+      if ((config.responseType ?? "json") === "json") {
+        try {
+          response = JSON.parse(xhr.response);
+        } catch (e) {
+          onError?.(
+            new Error(
+              `${xhr.status}: ${xhr.statusText}\nrequested: ${config.url}\nFailed to parse json. Received...\n${xhr.responseText}`,
+            ),
+          );
+        }
+      }
+
+      // no error yay!
+      onSuccess?.({
+        ok,
+        response,
+        responseText: xhr.responseText,
+        responseType: xhr.responseType,
+        status: xhr.status,
+        statusText: xhr.statusText,
+      });
+    } else {
+      // reject with an error message
+      onError?.(new Error(`${xhr.status}: ${xhr.statusText}\nrequested: ${config.url}\n\n${xhr.responseText}`));
+    }
+  };
+
+  xhr.open(config.method, config.url, true);
+  if (config.headers !== undefined) {
+    for (const key of Object.keys(config.headers)) {
+      xhr.setRequestHeader(key, config.headers[key]);
+    }
+  }
+  xhr.send((config.body ?? null) as any);
 };
 
-export const xhrEventLogger: (
-  xhrConfigProvider: XhrRequestConfigProvider,
-  xhrResolver?: XhrRequestResolver,
-) => EventLogger = (xhrConfigProvider, xhrResolver) => (metadata) => {
-  const config = xhrConfigProvider(metadata);
-  const result = xhrRequest(config);
-  xhrResolver?.(result);
-};
+export const xhrEventLogger: (xhrConfigProvider: XhrRequestConfigProvider) => EventLogger =
+  (xhrConfigProvider) => (metadata) => {
+    const { config, onError, onSuccess } = xhrConfigProvider(metadata);
+    xhrRequest(config, onSuccess, onError);
+  };

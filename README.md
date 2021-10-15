@@ -20,45 +20,78 @@ The library does not override any default behavior or modify the clipboard, it j
 <!-- include the clipboard logger minified file -->
 <script type="text/javascript" src="simple-clipboard-logger.min.js"></script>
 <script type="text/javascript">
-  // create a new logger instance
-  var logger = new simpleClipboardLogger.SimpleClipboardLogger();
-  // make the logger listen to all clipboard events on the document
-  logger.addEventTarget(document);
-  // track date info
-  logger.addMetadataProvider(simpleClipboardLogger.metadataProviders.dateMetadataProvider);
-  // track url info
-  logger.addMetadataProvider(simpleClipboardLogger.metadataProviders.hrefMetadataProvider);
-  // log when the event happens using all the captured data
-  logger.addEventLogger(simpleClipboardLogger.eventLoggers.consoleEventLogger);
+  // check to see if simpleClipboardLogger was included in the page
+  if (typeof simpleClipboardLogger !== "undefined") {
+    //   create an instance of the logger with throttling enabled (333ms)
+    var logger = new simpleClipboardLogger.SimpleClipboardLogger({ throttleWait: 333 });
+    // add the event listeners to the entire document
+    logger.addEventTarget(document);
+    // add the date to the recorded metadata
+    logger.addMetadataProvider(simpleClipboardLogger.metadataProviders.dateMetadataProvider);
+    // add the url to the recorded metadata
+    logger.addMetadataProvider(simpleClipboardLogger.metadataProviders.hrefMetadataProvider);
+    // log the data to the console
+    logger.addEventLogger(simpleClipboardLogger.eventLoggers.consoleEventLogger);
+    // post the data to a remote server
+    logger.addEventLogger(simpleClipboardLogger.eventLoggers.xhrEventLogger(postEvent));
+
+    function postEvent(metadata) {
+      return {
+        config: {
+          // the url to post to
+          url: "https://httpbin.org/post",
+          // the method to use
+          method: "post",
+          // the body. We will post all metadata in a json object {metadata: <event metadata>}
+          body: JSON.stringify({ metadata: metadata }),
+          // the headers to use
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      };
+    }
+  }
 </script>
 ```
 
-This would create the following json for a copy and paste event respectively.
-Notice how the selection id is the same.
-Unfortunately this only is the case when the copy and paste events occur in the same window.
-The selection id is not stored in the system clipboard.
-The json is logged to the console using the `consoleEventLogger` but could be sent to a server.
+This example sends the following json to the server.
 
 ```json
-// copy
 {
+  "metadata": {
     "eventType": "copy",
-    "data": {
-        "text/plain": "Lorem ipsum dolor sit amet consectetur adipisicing elit."
-    },
-    "date": "2021-09-22T00:49:30.481Z",
-    "href": "http://localhost:3000/example",
+    "data": { "text/plain": "Lorem ipsum dolor sit amet" },
+    "date": "2021-10-15T18:29:56.453Z",
+    "href": "http://localhost:3000/example/"
+  }
 }
+```
 
-// paste
+The example logs the following json to the console.
+
+```json
 {
-    "eventType": "paste",
-    "data": {
-        "text/html": "<meta charset='utf-8'><span style=\"color: rgb(0, 0, 0); font-family: Times; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;\">Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>",
-        "text/plain": "Lorem ipsum dolor sit amet consectetur adipisicing elit."
-    },
-    "date": "2021-09-22T00:51:28.224Z",
-    "href": "http://localhost:3000/example",
+  "eventType": "copy",
+  "data": {
+    "text/plain": "Lorem ipsum dolor sit amet"
+  },
+  "date": "2021-10-15T18:29:56.453Z",
+  "href": "http://localhost:3000/example/"
+}
+```
+
+If we paste the text we would get the html as well.
+
+```json
+{
+  "eventType": "paste",
+  "data": {
+    "text/html": "<meta charset='utf-8'><span style=\"color: rgb(0, 0, 0); font-family: Times; font-size: medium; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;\">Lorem ipsum dolor sit amet</span>",
+    "text/plain": "Lorem ipsum dolor sit amet"
+  },
+  "date": "2021-10-15T18:31:15.448Z",
+  "href": "http://localhost:3000/example/"
 }
 ```
 

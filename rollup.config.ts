@@ -72,7 +72,7 @@ const esmAndCJSBuild = {
     { dir: "dist/esm", format: "es", sourcemap: true },
     { dir: "dist/cjs", format: "cjs", sourcemap: true },
   ],
-  external: ["nanoid", "lodash.throttle"],
+  external: ["lodash.throttle"],
   plugins: [
     json(),
     nodeResolve(),
